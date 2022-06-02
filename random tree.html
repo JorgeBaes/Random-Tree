@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Tree</title>
+    <link rel="stylesheet" href="./libs/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./libs/jQuery.js"></script>
+    <script src="./libs/bootstrap.min.js"></script>
+    <script src="./libs/bootstrap.bundle.min.js"></script>
+    <link rel="shortcut icon" href="./images/image2.png">
+</head>
+<body class="noselect">
+    <div class="col-md-12 noselect" style="height: 100vh;">        
+        <div class="text-center" style="color: rgb(226, 190, 255); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            <h1>
+                Random Tree
+            </h1>
+        </div>
+        <div class="col-md-6 d-flex outer-div text-center">
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_alfa" id="s_alfa"></label>
+                </div>
+                <input type="range" min="0" max="100" step="1" id="r_alfa" oninput="render()">
+            </div>
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_width" id="s_width"></label>
+                </div>
+                <input type="range" min="0" max="50" step="5" id="r_width" oninput="render()">
+            </div>
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="increment" id="s_increment">Size</label>
+                </div>
+                <input type="range" name="" id="increment" min="0" max="100" oninput="render()">
+            </div>     
+        </div>
+        <div class="col-md-6 d-flex outer-div text-center">
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_line_width" id="s_line_width"></label>
+                </div>
+                <input type="range" min="0.1" max="2" step="0.1" id="r_line_width" oninput="update_gradient()">
+            </div>
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_wind" id="s_wind"></label>
+                </div>
+                <input type="range" min="-15" max="15" step="1" id="r_wind" oninput="render()">
+            </div>
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_width_dim" id="s_width_dim"></label>
+                </div>
+                <input type="range" min="0" max="0.2" step="0.01" id="r_width_dim" oninput="render()">
+            </div>
+            
+        </div>
+        <div class="col-md-6 d-flex outer-div text-center">
+            <div class="col-md-6 inner-div text-center" align="center">
+                <div>
+                    <label class="indicator" for="gradient_checkbox">Gradient</label>
+                </div>
+                <div>
+                    <input type="checkbox" class="form-check-input" name="" id="gradient_checkbox" oninput="update_gradient()">
+                </div>
+                <input type="color" name="" id="gradient_color_1" oninput="update_gradient()">
+                <input type="color" name="" id="gradient_color_2" oninput="update_gradient()">
+            </div>
+            <div class="col-md-4 inner-div" align="center">
+                <div>
+                    <label class="indicator" for="r_iteration" id="s_iteration"></label>
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+                <input type="range" min="1" max="15" step="1" id="r_iteration" oninput="render()">
+            </div>
+            <div class="col-md-6 inner-div text-center" align="center">
+                <div>
+                    <label class="indicator" for="background_color">Background</label>
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+                <input type="color" name="" id="background_color" oninput="update_background_color()">
+            </div>          
+        </div>
+        <div class="text-center" style="margin: 10px 0 10px 0;">
+            <button class="btn btn-outline-light" onclick="randomize_color()">Random Color</button>
+            <button class="btn btn-outline-light" onclick="randomize_tree()">Random Tree</button>
+        </div> 
+        <div class="col-md-12 canvas-div text-center">
+            <canvas id="draw_canvas" style="margin-bottom: 70px;"></canvas>
+        </div>      
+    </div>
+
+    <div class="footer">
+        <a href="https://github.com/JorgeBaes/random-tree" target="blank">
+            <img src="./images/git.png" class="img-icon" alt="" style="right: 10px;">
+        </a>
+        <a href="https://www.instagram.com/fractaltree12/" target="blank">
+            <img src="./images/insta.png" class="img-icon" alt="" style="right: 80px;">
+        </a>
+    </div>
+
+    <div class="modal fade" id="modal-mensagem">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div style="position: absolute; top: 5px; right: 5px;">
+                    <button id="btn-modal-close" type="button" class="btn btn-danger btn-lg" data-dismiss="modal-mensagem">X</button>
+                </div>
+                <div class="modal-header">
+                    <h4 class="modal-title" style="margin: auto;">Image Settings</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <h6 style="color: brown;">
+                        Set the image pixel size and give your tree a name
+                    </h6>
+                    <div class="form-control col-md-12" style="margin-top: 25px;">
+                        <div class="col-md-12 image-config-div">                            
+                            <h5>Image Size</h5>
+                            <select name="box_size" title="Box Size (Pixels)" id="box_size" oninput="update_box_size()">
+                            <option value="100">100</option>
+                            <option value="720">720</option>
+                            <option value="1080">1080</option>
+                            <option value="1920">1920</option>
+                            <option value="3840">3840</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 image-config-div">
+                            <h5>File Name</h5>
+                            <input type="text" name="" id="file_name" title="File Name" style="text-align: center; margin-top: 5px;" onchange="update_file_name()">
+                        </div>
+                        <div class="col-md-12 image-config-div" style="margin-bottom: 20px;">
+                            <button class="btn btn-success" onclick="download_image()">Download</button>
+                        </div>                        
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-light" id="btn-modal" style="width: 100px; position: fixed; bottom: 15px; left: calc(50% - 50px);">Download</button>
+    <script>
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(document).ready(function() {
+            $('#btn-modal').click(function() {
+                $('#modal-mensagem').modal('show')
+            })
+
+            $('#btn-modal-close').click(function() {
+                $('#modal-mensagem').modal('toggle')
+            })
+        })
+    </script>
+
+    
+    <div class="modal fade" id="modal-tutorial">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div style="position: absolute; top: 5px; right: 5px;">
+                    <button id="btn-tutorial-close" type="button" class="btn btn-danger btn-lg" data-dismiss="modal-tutorial">X</button>
+                </div>
+                <div class="modal-header">
+                    <h4 class="modal-title" style="margin: auto; color: rgb(0, 26, 110);">Tutorial</h4>
+                </div>
+                <div class="modal-body text-justify">
+                    <div>
+                        <h6 style="color: brown; text-align: center;">
+                            Welcome to Random Tree, the algorithm that shows the beauty of fractal structures.
+                        </h6>                    
+                    </div>
+                    <div style="margin: 25px 0px;">
+                        <span>
+                            To generate a tree you can play with some parameters which influence in the process of generating
+                            the fractal. 
+                            <br>
+                            <br>
+                            You can define the number of iteration of the fractal (Iteration) and also set the coloring
+                            of the tree and background.
+                            <br>
+                            <br>
+                            Here on the tutorial you won't find expecific explanation on how the algorithm works because 
+                            even the creator doesn't understand how it does. The fractal art is a mystery and that is its beauty.
+                            <br>
+                            <br>
+                            To learn about it you have to experiment yourself and if you find some beautifull trees you can download 
+                            an image file on "Download".
+                        </span>                    
+                    </div>
+
+                    <div class="modal-footer">
+                        <h6 style="color:chocolate;">
+                            Jorge Baes Caetano
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-light" id="btn-tutorial" style="width: 100px; position: fixed; top: 10px; left: 10px;">Tutorial</button>
+    <script>
+        $(document).ready(function() {
+            $('#btn-tutorial').click(function() {
+                $('#modal-tutorial').modal('show')
+            })
+            $('#btn-tutorial-close').click(function() {
+                $('#modal-tutorial').modal('toggle')
+            })
+        })
+    </script>
+
+    
+
+
+
+    <canvas id="image_canvas" hidden></canvas>
+    <script src="./libs/tree.js"></script>
+</body>
+</html>
